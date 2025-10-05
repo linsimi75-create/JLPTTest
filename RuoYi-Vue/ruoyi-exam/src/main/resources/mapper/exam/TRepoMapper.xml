@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.exam.mapper.TRepoMapper">
+    
+    <resultMap type="TRepo" id="TRepoResult">
+        <result property="id"    column="id"    />
+        <result property="repoName"    column="repo_name"    />
+        <result property="createId"    column="create_id"    />
+        <result property="repoDesc"    column="repo_desc"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="repoType"    column="repo_type"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="cover"    column="cover"    />
+    </resultMap>
+
+    <sql id="selectTRepoVo">
+        select id, repo_name, create_id, repo_desc, create_time, update_time, repo_type, deleted, cover from t_repo
+    </sql>
+
+    <select id="selectTRepoList" parameterType="TRepo" resultMap="TRepoResult">
+        <include refid="selectTRepoVo"/>
+        <where>  
+            <if test="repoName != null  and repoName != ''"> and repo_name like concat('%', #{repoName}, '%')</if>
+            <if test="createId != null "> and create_id = #{createId}</if>
+            <if test="repoType != null "> and repo_type = #{repoType}</if>
+            <if test="deleted != null "> and deleted = #{deleted}</if>
+        </where>
+    </select>
+    
+    <select id="selectTRepoById" parameterType="Long" resultMap="TRepoResult">
+        <include refid="selectTRepoVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTRepo" parameterType="TRepo" useGeneratedKeys="true" keyProperty="id">
+        insert into t_repo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="repoName != null">repo_name,</if>
+            <if test="createId != null">create_id,</if>
+            <if test="repoDesc != null">repo_desc,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="repoType != null">repo_type,</if>
+            <if test="deleted != null">deleted,</if>
+            <if test="cover != null">cover,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="repoName != null">#{repoName},</if>
+            <if test="createId != null">#{createId},</if>
+            <if test="repoDesc != null">#{repoDesc},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="repoType != null">#{repoType},</if>
+            <if test="deleted != null">#{deleted},</if>
+            <if test="cover != null">#{cover},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTRepo" parameterType="TRepo">
+        update t_repo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="repoName != null">repo_name = #{repoName},</if>
+            <if test="createId != null">create_id = #{createId},</if>
+            <if test="repoDesc != null">repo_desc = #{repoDesc},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="repoType != null">repo_type = #{repoType},</if>
+            <if test="deleted != null">deleted = #{deleted},</if>
+            <if test="cover != null">cover = #{cover},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTRepoById" parameterType="Long">
+        delete from t_repo where id = #{id}
+    </delete>
+
+    <delete id="deleteTRepoByIds" parameterType="String">
+        delete from t_repo where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

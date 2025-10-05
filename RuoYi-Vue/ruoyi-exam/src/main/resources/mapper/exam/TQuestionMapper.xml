@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.exam.mapper.TQuestionMapper">
+    
+    <resultMap type="TQuestion" id="TQuestionResult">
+        <result property="id"    column="id"    />
+        <result property="repoId"    column="repo_id"    />
+        <result property="questionType"    column="question_type"    />
+        <result property="stem"    column="stem"    />
+        <result property="answer"    column="answer"    />
+        <result property="analysis"    column="analysis"    />
+        <result property="deleted"    column="deleted"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createId"    column="create_id"    />
+        <result property="accuracyRate"    column="accuracy_rate"    />
+    </resultMap>
+
+    <sql id="selectTQuestionVo">
+        select id, repo_id, question_type, stem, answer, analysis, deleted, create_time, update_time, create_id, accuracy_rate from t_question
+    </sql>
+
+    <select id="selectTQuestionList" parameterType="TQuestion" resultMap="TQuestionResult">
+        <include refid="selectTQuestionVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="repoId != null "> and repo_id = #{repoId}</if>
+            <if test="questionType != null "> and question_type = #{questionType}</if>
+            <if test="deleted != null "> and deleted = #{deleted}</if>
+            <if test="createId != null "> and create_id = #{createId}</if>
+            <if test="accuracyRate != null "> and accuracy_rate = #{accuracyRate}</if>
+        </where>
+    </select>
+    
+    <select id="selectTQuestionById" parameterType="Long" resultMap="TQuestionResult">
+        <include refid="selectTQuestionVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTQuestion" parameterType="TQuestion" useGeneratedKeys="true" keyProperty="id">
+        insert into t_question
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="repoId != null">repo_id,</if>
+            <if test="questionType != null">question_type,</if>
+            <if test="stem != null and stem != ''">stem,</if>
+            <if test="answer != null and answer != ''">answer,</if>
+            <if test="analysis != null and analysis != ''">analysis,</if>
+            <if test="deleted != null">deleted,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createId != null">create_id,</if>
+            <if test="accuracyRate != null">accuracy_rate,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="repoId != null">#{repoId},</if>
+            <if test="questionType != null">#{questionType},</if>
+            <if test="stem != null and stem != ''">#{stem},</if>
+            <if test="answer != null and answer != ''">#{answer},</if>
+            <if test="analysis != null and analysis != ''">#{analysis},</if>
+            <if test="deleted != null">#{deleted},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createId != null">#{createId},</if>
+            <if test="accuracyRate != null">#{accuracyRate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTQuestion" parameterType="TQuestion">
+        update t_question
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="repoId != null">repo_id = #{repoId},</if>
+            <if test="questionType != null">question_type = #{questionType},</if>
+            <if test="stem != null and stem != ''">stem = #{stem},</if>
+            <if test="answer != null and answer != ''">answer = #{answer},</if>
+            <if test="analysis != null and analysis != ''">analysis = #{analysis},</if>
+            <if test="deleted != null">deleted = #{deleted},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createId != null">create_id = #{createId},</if>
+            <if test="accuracyRate != null">accuracy_rate = #{accuracyRate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTQuestionById" parameterType="Long">
+        delete from t_question where id = #{id}
+    </delete>
+
+    <delete id="deleteTQuestionByIds" parameterType="String">
+        delete from t_question where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
